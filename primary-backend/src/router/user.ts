@@ -2,7 +2,8 @@ import { Router, Request, Response } from 'express';
 import { authMiddleware } from '../middleware';
 import { signInSchema, signUpSchema } from '../types';
 import { prismaClient } from '../db'; // Ensure this path is correct
-
+import jwt from 'jsonwebtoken';
+import { JWTPASSWORD } from '../config';
 const router = Router();
 
 router.post("/signup", async (req: Request, res: Response) => { 
@@ -47,7 +48,9 @@ router.post("/signup", async (req: Request, res: Response) => {
     
 });
 
-router.post("/signup", async (req: Request, res: Response) => { 
+router.post("/signin", async (req: Request, res: Response) => { 
+    console.log("Signin P");
+    
    
     // Parse request body correctly
     const parsedData = signInSchema.safeParse(req.body);
@@ -75,10 +78,46 @@ router.post("/signup", async (req: Request, res: Response) => {
         })
         return;
     }
-    
-    //Sign the jwt
+   
 
+    //Sign the jwt
+    const token=jwt.sign({
+        id:user.id,
+        
+    },JWTPASSWORD);
+
+    res.status(201).json({
+        token:token
+    })
 
 });
+
+
+
+router.get('/',authMiddleware,async(req,res)=>{
+
+     console.log("Inside this");
+     
+    //To do fix the type
+    //@ts-ignore
+    const id=req.id;
+    const user=await prismaClient.user.findFirst({
+        where:{
+            id
+        },
+        select:{
+            name:true,
+            email:true,
+          
+        }
+    })
+
+     res.status(201).json({
+        user
+    })
+     
+    
+
+})
 
 export const userRouter = router;
