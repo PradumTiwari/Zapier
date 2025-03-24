@@ -10,10 +10,11 @@ router.post("/signup", async (req: Request, res: Response) => {
    
         // Parse request body correctly
         const parsedData = signUpSchema.safeParse(req.body);
-
+       console.log(parsedData);
+       
         if (!parsedData.success) {
             res.status(400).json({
-                message: "Incorrect Inputs",
+                message: "Incorrect Innputs",
                 errors: parsedData.error.errors // Send validation errors for debugging
             });
            return;
