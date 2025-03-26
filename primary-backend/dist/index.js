@@ -12,6 +12,6 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use("/api/v1/user", user_1.userRouter);
 app.use('/api/v1/zap', zap_1.zapRouter);
-app.listen(3000, () => {
+app.listen(3002, () => {
     console.log("Port Listening on Port 3000");
 });

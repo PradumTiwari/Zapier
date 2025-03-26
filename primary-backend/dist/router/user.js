@@ -55,36 +55,42 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
     });
 }));
 router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("Signin P");
-    // Parse request body correctly
-    const parsedData = types_1.signInSchema.safeParse(req.body);
-    if (!parsedData.success) {
-        res.status(400).json({
-            message: "Incorrect Inputs",
-            errors: parsedData.error.errors // Send validation errors for debugging
-        });
-        return;
-    }
-    const { username, password } = parsedData.data;
-    const user = yield db_1.prismaClient.user.findFirst({
-        where: {
-            email: username,
-            password: password,
+    try {
+        console.log("Signin P");
+        // Parse request body correctly
+        const parsedData = types_1.signInSchema.safeParse(req.body);
+        if (!parsedData.success) {
+            res.status(400).json({
+                message: "Incorrect Inputs",
+                errors: parsedData.error.errors // Send validation errors for debugging
+            });
+            return;
         }
-    });
-    if (!user) {
-        res.status(403).json({
-            message: "Invalid Credentials"
+        const { username, password } = parsedData.data;
+        const user = yield db_1.prismaClient.user.findFirst({
+            where: {
+                email: username,
+                password: password,
+            }
         });
-        return;
+        if (!user) {
+            res.status(400).json({
+                message: "Invalid Credentials"
+            });
+            return;
+        }
+        //Sign the jwt
+        const token = jsonwebtoken_1.default.sign({
+            id: user.id,
+        }, config_1.JWTPASSWORD);
+        res.status(201).json({
+            token: token
+        });
     }
-    //Sign the jwt
-    const token = jsonwebtoken_1.default.sign({
-        id: user.id,
-    }, config_1.JWTPASSWORD);
-    res.status(201).json({
-        token: token
-    });
+    catch (error) {
+        console.log("eror", error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
 }));
 router.get('/', middleware_1.authMiddleware, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("Inside this");

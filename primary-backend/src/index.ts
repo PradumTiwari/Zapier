@@ -11,7 +11,8 @@ app.use("/api/v1/user",userRouter);
 app.use('/api/v1/zap',zapRouter);
 
 
-app.listen(3000,()=>{
+app.listen(3002,()=>{
     console.log("Port Listening on Port 3000");
+    
     
 })

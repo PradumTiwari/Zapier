@@ -50,6 +50,8 @@ router.post("/signup", async (req: Request, res: Response) => {
 });
 
 router.post("/signin", async (req: Request, res: Response) => { 
+    
+    try{
     console.log("Signin P");
     
    
@@ -65,7 +67,8 @@ router.post("/signin", async (req: Request, res: Response) => {
     }
 
     const { username, password } = parsedData.data;
-
+     console.log("Passed Zod");
+     
     const user=await prismaClient.user.findFirst({
         where:{
             email:username,
@@ -74,7 +77,7 @@ router.post("/signin", async (req: Request, res: Response) => {
     });
 
     if(!user){
-        res.status(403).json({
+        res.status(400).json({
             message:"Invalid Credentials"
         })
         return;
@@ -89,7 +92,11 @@ router.post("/signin", async (req: Request, res: Response) => {
 
     res.status(201).json({
         token:token
-    })
+    })}
+    catch(error){
+        console.log("eror",error);
+        res.status(500).json({ message: "Something went wrong" }); 
+    }
 
 });
 
