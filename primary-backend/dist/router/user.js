@@ -67,6 +67,7 @@ router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function*
             return;
         }
         const { username, password } = parsedData.data;
+        console.log("Passed Zod");
         const user = yield db_1.prismaClient.user.findFirst({
             where: {
                 email: username,

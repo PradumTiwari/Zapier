@@ -71,7 +71,7 @@ const Page = () => {
         My Zaps
       </div>
       <DarkButton onClick={() => {
-        router.push("/zap/create");
+        router.push('/zap/create')
       }}>
         Create
       </DarkButton>
