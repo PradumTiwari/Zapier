@@ -14,15 +14,10 @@ const express_1 = require("express");
 const db_1 = require("../db");
 const router = (0, express_1.Router)();
 router.get("/available", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const availableAction = yield db_1.prismaClient.availableAction.findMany({});
-        console.log("a", availableAction);
-        return res.json({ availableAction });
-    }
-    catch (error) {
-        console.log("Error");
-        return error;
-        res.status(500).json({ error: "Internal Server error" });
-    }
+    const availableActions = yield db_1.prismaClient.availableAction.findMany({});
+    res.json({
+        availableActions
+    });
+    console.log("Actions we are sending", availableActions);
 }));
 exports.actionRouter = router;
